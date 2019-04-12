@@ -6,11 +6,20 @@ public class BallMovement : MonoBehaviour {
     //public bool gameStarted = false;
     private float velocity;
     private Rigidbody2D ball;
-    public GameObject player;
+    private GameObject player;
+    
+    AudioSource wallHit;
+    AudioSource paddleHit;
+    AudioSource miss;
     
     void Awake() {
         player = GameObject.Find("Player");
         ball = GetComponent<Rigidbody2D>();
+        
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        wallHit = audioSources[0];
+        paddleHit = audioSources[1];
+        miss = audioSources[2];
     }
     
     void Start() {
@@ -32,6 +41,7 @@ public class BallMovement : MonoBehaviour {
     void OnCollisionEnter2D(Collision2D collision) {
         
         if (collision.gameObject.name != "Player") {
+            wallHit.Play();
             return;
         }
         
@@ -40,6 +50,17 @@ public class BallMovement : MonoBehaviour {
         }
             
         ball.AddForce(ball.velocity.normalized * 1.1f, ForceMode2D.Impulse);
-        Debug.Log(ball.velocity);
+        paddleHit.Play();
+    }
+    
+    void OnGUI() {
+        if (transform.position.y < player.GetComponent<Transform>().position.y) {
+            miss.Play();
+//            Destroy(gameObject);
+
+            transform.position = new Vector2(0, 0);
+            ball.velocity = Vector2.zero;
+//rigidbody.angularVelocity = Vector3.zero;
+        }
     }
 }
