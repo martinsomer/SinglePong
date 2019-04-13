@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BallMovement : MonoBehaviour {
-    //public bool gameStarted = false;
     private float velocity;
     private Rigidbody2D ball;
     private GameObject player;
     private GameObject scoreText;
-    private int score;
+    public int score;
     
     AudioSource wallHit;
     AudioSource paddleHit;
@@ -63,10 +63,7 @@ public class BallMovement : MonoBehaviour {
     void OnGUI() {
         if (transform.position.y < player.GetComponent<Transform>().position.y) {
             miss.Play();
-            //Destroy(gameObject);
-
-            transform.position = new Vector2(0, 0);
-            ball.velocity = Vector2.zero;
+            SceneManager.LoadScene(0);
         }
     }
 }
