@@ -14,6 +14,7 @@ public class BallMovement : MonoBehaviour {
     private AudioSource paddleHit;
     private AudioSource miss;
     
+    private bool audioIsPlaying = false;
     private bool gameStarted = false;
     public static int score;
     
@@ -28,6 +29,8 @@ public class BallMovement : MonoBehaviour {
         wallHit = audioSources[0];
         paddleHit = audioSources[1];
         miss = audioSources[2];
+        
+        GetComponent<TrailRenderer>().enabled = false;
     }
     
     void Update() {
@@ -43,6 +46,7 @@ public class BallMovement : MonoBehaviour {
         
         if (Input.GetMouseButtonDown(0)) {
             gameStarted = true;
+            GetComponent<TrailRenderer>().enabled = true;
 
             float limit_x;
             do {
@@ -81,10 +85,13 @@ public class BallMovement : MonoBehaviour {
     }
     
     private IEnumerator gameOver() {
-        GetComponent<MeshRenderer>().enabled = false;
-        transform.position = new Vector2(0, 0);
-        ball.velocity = Vector2.zero;
-        miss.Play();
+//        GetComponent<MeshRenderer>().enabled = false;
+//        transform.position = new Vector2(0, 0);
+//        ball.velocity = Vector2.zero;
+        if (!audioIsPlaying) {
+            audioIsPlaying = true;
+            miss.Play();
+        }
         yield return new WaitForSeconds(miss.clip.length);
         SceneManager.LoadScene(2);
     }
