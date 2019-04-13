@@ -64,7 +64,7 @@ public class BallMovement : MonoBehaviour {
     }
     
     void OnGUI() {
-        if (transform.position.y < player.GetComponent<Transform>().position.y) {
+        if (transform.position.y < -5.0f) {
             StartCoroutine(gameOver());
         }
     }
