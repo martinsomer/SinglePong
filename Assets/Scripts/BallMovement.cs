@@ -14,6 +14,7 @@ public class BallMovement : MonoBehaviour {
     private AudioSource paddleHit;
     private AudioSource miss;
     
+    private bool gameStarted = false;
     public static int score;
     
     void Awake() {
@@ -29,44 +30,54 @@ public class BallMovement : MonoBehaviour {
         miss = audioSources[2];
     }
     
-    void Start() {
+    void Update() {
+        
+        if (gameStarted) {
+            
+            if (transform.position.y < -5.0f) {
+                StartCoroutine(gameOver());
+            }
+            
+            return;
+        }
+        
+        if (Input.GetMouseButtonDown(0)) {
+            gameStarted = true;
+
+            float limit_x;
+            do {
+                limit_x = Random.Range(-1.0f, 1.0f);
+            } while (limit_x > -0.3f && limit_x < 0.3f);
+            float limit_y = 1;
+
+            Vector2 randomVector = new Vector2(limit_x, limit_y);
+            ball.AddRelativeForce(randomVector * 150);
+
+            return;
+        }
+
         float pos_x = player.GetComponent<Transform>().position.x;
         float pos_y = player.GetComponent<Transform>().position.y + player.GetComponent<Transform>().localScale.y/2 + transform.localScale.y/2;
-        
-        transform.position = Vector2.Lerp(transform.position, new Vector2(pos_x, pos_y + 0.02f), 1);
-        
-        float limit_x;
-        do {
-            limit_x = Random.Range(-1.0f, 1.0f);
-        } while (limit_x > -0.3f && limit_x < 0.3f);
-        float limit_y = 1;
-        
-        Vector2 randomVector = new Vector2(limit_x, limit_y);
-        ball.AddRelativeForce(randomVector * 150);
+        transform.position = Vector2.Lerp(transform.position, new Vector2(pos_x, pos_y), 1);
     }
     
     void OnCollisionEnter2D(Collision2D collision) {
+        if (!gameStarted) {
+            return;
+        }
         
         if (collision.gameObject.name != "Player") {
             wallHit.Play();
             return;
         }
         
-        if (ball.velocity.x > 25.0f || ball.velocity.y > 25.0f) {
-            return;
+        if (ball.velocity.x < 25.0f || ball.velocity.y < 25.0f) {
+            ball.AddForce(ball.velocity.normalized * 1.1f, ForceMode2D.Impulse);
         }
-            
-        ball.AddForce(ball.velocity.normalized * 1.1f, ForceMode2D.Impulse);
-        paddleHit.Play();
         
+        paddleHit.Play();
         score++;
         scoreText.GetComponent<Text>().text = score.ToString();
-    }
-    
-    void OnGUI() {
-        if (transform.position.y < -5.0f) {
-            StartCoroutine(gameOver());
-        }
     }
     
     private IEnumerator gameOver() {
