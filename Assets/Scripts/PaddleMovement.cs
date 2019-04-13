@@ -18,27 +18,21 @@ public class PaddleMovement : MonoBehaviour {
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
         mousePosition.y = transform.position.y;
         
+        var newPosition = transform.position;
+        
         // Touching left wall
         if (transform.position.x - transform.localScale.x/2 < leftWall.GetComponent<Transform>().position.x + leftWall.GetComponent<Transform>().localScale.x/2) {
+            newPosition.x = leftWall.GetComponent<Transform>().position.x + leftWall.GetComponent<Transform>().localScale.x/2 + transform.localScale.x/2;
             
-            float pos_x = leftWall.GetComponent<Transform>().position.x + leftWall.GetComponent<Transform>().localScale.x/2 + transform.localScale.x/2;
-            float pos_y = transform.position.y;
-            
-            transform.position = new Vector2(pos_x, pos_y);
-            return;
-        }
-        
         // Touching right wall
-        if (transform.position.x + transform.localScale.x/2 > rightWall.GetComponent<Transform>().position.x - rightWall.GetComponent<Transform>().localScale.x/2) {
-
-            float pos_x = rightWall.GetComponent<Transform>().position.x - rightWall.GetComponent<Transform>().localScale.x/2 - transform.localScale.x/2;
-            float pos_y = transform.position.y;
+        } else if (transform.position.x + transform.localScale.x/2 > rightWall.GetComponent<Transform>().position.x - rightWall.GetComponent<Transform>().localScale.x/2) {
+            newPosition.x = rightWall.GetComponent<Transform>().position.x - rightWall.GetComponent<Transform>().localScale.x/2 - transform.localScale.x/2;
             
-            transform.position = new Vector2(pos_x, pos_y);
-            return;
+        // Not touching wall
+        } else {
+            newPosition.x = mousePosition.x;
         }
         
-        // Not touching wall
-        transform.position = new Vector2(mousePosition.x, mousePosition.y);
+        transform.position = newPosition;
     }
 }

@@ -59,10 +59,10 @@ public class BallMovement : MonoBehaviour {
 
             return;
         }
-
-        float pos_x = player.GetComponent<Transform>().position.x;
-        float pos_y = player.GetComponent<Transform>().position.y + player.GetComponent<Transform>().localScale.y/2 + transform.localScale.y/2;
-        transform.position = new Vector2(pos_x, pos_y);
+        
+        var newPosition = player.GetComponent<Transform>().position;
+        newPosition.y = player.GetComponent<Transform>().position.y + player.GetComponent<Transform>().localScale.y/2 + transform.localScale.y/2;
+        transform.position = newPosition;
     }
     
     void OnCollisionEnter2D(Collision2D collision) {
@@ -75,7 +75,7 @@ public class BallMovement : MonoBehaviour {
             return;
         }
         
-        if (ball.velocity.x < 25.0f || ball.velocity.y < 25.0f) {
+        if (ball.velocity.x < 19.0f && ball.velocity.y < 19.0f) {
             ball.AddForce(ball.velocity.normalized * 1.1f, ForceMode2D.Impulse);
         }
         
@@ -85,9 +85,6 @@ public class BallMovement : MonoBehaviour {
     }
     
     private IEnumerator gameOver() {
-//        GetComponent<MeshRenderer>().enabled = false;
-//        transform.position = new Vector2(0, 0);
-//        ball.velocity = Vector2.zero;
         if (!audioIsPlaying) {
             audioIsPlaying = true;
             miss.Play();
