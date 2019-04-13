@@ -5,12 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class ButtonHandler : MonoBehaviour {
     
-    private AudioSource select;
+    private AudioSource buttonAudio;
     private IEnumerator coroutine;
     
     void Awake() {
-        AudioSource[] audioSources = GetComponents<AudioSource>();
-        select = audioSources[0];
+        buttonAudio = GetComponent<AudioSource>();
     }
     
     public void loadScene(int scene) {
@@ -18,8 +17,8 @@ public class ButtonHandler : MonoBehaviour {
     }
     
     private IEnumerator load(int scene) {
-        select.Play();
-        yield return new WaitForSeconds(select.clip.length);
+        buttonAudio.Play();
+        yield return new WaitForSeconds(buttonAudio.clip.length);
         SceneManager.LoadScene(scene);
     }
     
@@ -28,8 +27,8 @@ public class ButtonHandler : MonoBehaviour {
     }
     
     private IEnumerator quit() {
-        select.Play();
-        yield return new WaitForSeconds(select.clip.length);
+        buttonAudio.Play();
+        yield return new WaitForSeconds(buttonAudio.clip.length);
         Application.Quit();
     }
 }
