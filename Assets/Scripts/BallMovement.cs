@@ -5,17 +5,20 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class BallMovement : MonoBehaviour {
-    private float velocity;
     private Rigidbody2D ball;
     private GameObject player;
     private GameObject scoreText;
-    public int score;
+    private IEnumerator coroutine;
     
-    AudioSource wallHit;
-    AudioSource paddleHit;
-    AudioSource miss;
+    private AudioSource wallHit;
+    private AudioSource paddleHit;
+    private AudioSource miss;
+    
+    public static int score;
     
     void Awake() {
+        score = 0;
+        
         player = GameObject.Find("Player");
         ball = GetComponent<Rigidbody2D>();
         scoreText = GameObject.Find("Score");
@@ -62,8 +65,16 @@ public class BallMovement : MonoBehaviour {
     
     void OnGUI() {
         if (transform.position.y < player.GetComponent<Transform>().position.y) {
-            miss.Play();
-            SceneManager.LoadScene(0);
+            StartCoroutine(gameOver());
         }
+    }
+    
+    private IEnumerator gameOver() {
+        GetComponent<MeshRenderer>().enabled = false;
+        transform.position = new Vector2(0, 0);
+        ball.velocity = Vector2.zero;
+        miss.Play();
+        yield return new WaitForSeconds(miss.clip.length);
+        SceneManager.LoadScene(2);
     }
 }
