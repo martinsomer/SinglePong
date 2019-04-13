@@ -58,7 +58,7 @@ public class BallMovement : MonoBehaviour {
 
         float pos_x = player.GetComponent<Transform>().position.x;
         float pos_y = player.GetComponent<Transform>().position.y + player.GetComponent<Transform>().localScale.y/2 + transform.localScale.y/2;
-        transform.position = Vector2.Lerp(transform.position, new Vector2(pos_x, pos_y), 1);
+        transform.position = new Vector2(pos_x, pos_y);
     }
     
     void OnCollisionEnter2D(Collision2D collision) {
