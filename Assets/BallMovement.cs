@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BallMovement : MonoBehaviour {
     //public bool gameStarted = false;
     private float velocity;
     private Rigidbody2D ball;
     private GameObject player;
+    private GameObject scoreText;
+    private int score;
     
     AudioSource wallHit;
     AudioSource paddleHit;
@@ -15,6 +18,7 @@ public class BallMovement : MonoBehaviour {
     void Awake() {
         player = GameObject.Find("Player");
         ball = GetComponent<Rigidbody2D>();
+        scoreText = GameObject.Find("Score");
         
         AudioSource[] audioSources = GetComponents<AudioSource>();
         wallHit = audioSources[0];
@@ -26,7 +30,7 @@ public class BallMovement : MonoBehaviour {
         float pos_x = player.GetComponent<Transform>().position.x;
         float pos_y = player.GetComponent<Transform>().position.y + player.GetComponent<Transform>().localScale.y/2 + transform.localScale.y/2;
         
-        transform.position = Vector2.Lerp(transform.position, new Vector2(pos_x, pos_y), 1);
+        transform.position = Vector2.Lerp(transform.position, new Vector2(pos_x, pos_y + 0.02f), 1);
         
         float limit_x;
         do {
@@ -35,7 +39,7 @@ public class BallMovement : MonoBehaviour {
         float limit_y = 1;
         
         Vector2 randomVector = new Vector2(limit_x, limit_y);
-        ball.AddRelativeForce(randomVector * 100);
+        ball.AddRelativeForce(randomVector * 150);
     }
     
     void OnCollisionEnter2D(Collision2D collision) {
@@ -51,16 +55,18 @@ public class BallMovement : MonoBehaviour {
             
         ball.AddForce(ball.velocity.normalized * 1.1f, ForceMode2D.Impulse);
         paddleHit.Play();
+        
+        score++;
+        scoreText.GetComponent<Text>().text = score.ToString();
     }
     
     void OnGUI() {
         if (transform.position.y < player.GetComponent<Transform>().position.y) {
             miss.Play();
-//            Destroy(gameObject);
+            //Destroy(gameObject);
 
             transform.position = new Vector2(0, 0);
             ball.velocity = Vector2.zero;
-//rigidbody.angularVelocity = Vector3.zero;
         }
     }
 }
