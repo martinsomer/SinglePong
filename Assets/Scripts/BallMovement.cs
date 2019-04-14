@@ -47,6 +47,7 @@ public class BallMovement : MonoBehaviour {
         if (Input.GetMouseButtonDown(0)) {
             gameStarted = true;
             GetComponent<TrailRenderer>().enabled = true;
+            MusicController.music.Play();
 
             float limit_x;
             do {
@@ -55,7 +56,7 @@ public class BallMovement : MonoBehaviour {
             float limit_y = 1;
 
             Vector2 randomVector = new Vector2(limit_x, limit_y);
-            ball.AddRelativeForce(randomVector * 150);
+            ball.AddRelativeForce(randomVector * 300);
 
             return;
         }
@@ -76,7 +77,7 @@ public class BallMovement : MonoBehaviour {
         }
         
         if (ball.velocity.x < 19.0f && ball.velocity.y < 19.0f) {
-            ball.AddForce(ball.velocity.normalized * 1.1f, ForceMode2D.Impulse);
+            ball.AddForce(ball.velocity.normalized * 1.05f, ForceMode2D.Impulse);
         }
         
         paddleHit.Play();
