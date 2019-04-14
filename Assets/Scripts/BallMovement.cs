@@ -29,8 +29,6 @@ public class BallMovement : MonoBehaviour {
         wallHit = audioSources[0];
         paddleHit = audioSources[1];
         miss = audioSources[2];
-        
-        GetComponent<TrailRenderer>().enabled = false;
     }
     
     void Update() {

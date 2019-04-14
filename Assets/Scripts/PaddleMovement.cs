@@ -14,8 +14,7 @@ public class PaddleMovement : MonoBehaviour {
     }
     
     void OnGUI() {
-        mousePosition = Input.mousePosition;
-        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.y = transform.position.y;
         
         var newPosition = transform.position;
